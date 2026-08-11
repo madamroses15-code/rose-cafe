@@ -4,12 +4,12 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#8f2947">
-  <meta name="description" content="ROSE Café — เมนูโฮมเมดและเครื่องดื่ม สั่งล่วงหน้าและรับกลับบ้านเท่านั้น">
-  <meta property="og:title" content="ROSE Café | Takeaway Only">
-  <meta property="og:description" content="เลือกเมนูโปรด สั่งล่วงหน้า แล้วมารับเมื่อพร้อม">
+  <meta name="description" content="ROSE Café — เมนูโฮมเมดและเครื่องดื่ม สั่งออนไลน์ง่าย ๆ พร้อมจัดส่งความอร่อยถึงมือคุณ">
+  <meta property="og:title" content="ROSE Café | Delivery">
+  <meta property="og:description" content="เลือกเมนูโปรด สั่งล่วงหน้าได้สะดวก พร้อมจัดส่งความอร่อยถึงมือคุณ">
   <meta property="og:image" content="https://madamroses15-code.github.io/rose-cafe/assets/rose-cafe-logo.jpg">
   <meta property="og:type" content="website">
-  <title>ROSE Café | สั่งกลับบ้าน</title>
+  <title>ROSE Café | สั่งออนไลน์ จัดส่งถึงมือคุณ</title>
   <link rel="icon" href="assets/rose-cafe-logo.jpg">
   <style>
     :root {
@@ -73,6 +73,11 @@
     .steps{display:grid;gap:14px;margin-top:22px}
     .step{display:flex;align-items:center;gap:13px;color:var(--ink);font-weight:800}
     .step b{flex:0 0 34px;height:34px;display:grid;place-items:center;border-radius:11px;background:var(--rose-200);color:var(--rose-900)}
+    .qr-section{display:grid;grid-template-columns:.85fr 1.15fr;align-items:center;gap:46px;margin-bottom:72px;padding:42px;border-radius:32px;background:linear-gradient(135deg,#fff0f7,#fff 58%,#fff4d9);border:1px solid var(--rose-200);box-shadow:0 18px 44px rgba(100,32,54,.1)}
+    .qr-image{width:min(100%,420px);justify-self:center;border-radius:26px;box-shadow:0 18px 44px rgba(143,41,71,.2)}
+    .qr-copy h2{margin:10px 0 14px}
+    .qr-copy p{color:var(--muted);line-height:1.8;margin:0}
+    .qr-link{display:inline-flex;margin-top:22px;color:var(--rose-700);font-weight:900;text-decoration:none;border-bottom:2px dashed var(--rose-500)}
     footer{padding:24px 0 calc(28px + env(safe-area-inset-bottom));border-top:1px solid var(--rose-200);color:var(--muted);font-size:.88rem;text-align:center}
     .mobile-order{display:none}
     @media(max-width:820px){
@@ -87,6 +92,8 @@
       .hero-visual{max-width:520px;margin:auto}
       .stamp{left:2px;bottom:12px;width:112px;height:112px;font-size:.88rem}
       .feature-grid{grid-template-columns:1fr;padding-bottom:96px}
+      .qr-section{grid-template-columns:1fr;gap:28px;margin-bottom:110px;padding:28px;text-align:center}
+      .qr-image{width:min(100%,460px)}
       .mobile-order{display:flex;position:fixed;z-index:20;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));min-height:58px;border-radius:18px;color:#fff;background:linear-gradient(135deg,var(--rose-700),var(--rose-500));align-items:center;justify-content:center;text-decoration:none;font-weight:900;box-shadow:0 16px 40px rgba(100,32,54,.38)}
     }
     @media(max-width:560px){
@@ -106,7 +113,7 @@
   <header class="shell topbar">
     <a class="brand" href="#top" aria-label="ROSE Café หน้าหลัก">
       <img src="assets/rose-cafe-logo.jpg" alt="โลโก้ ROSE Café">
-      <span class="brand-copy"><strong>ROSE Café</strong><small>Takeaway &amp; Delivery</small></span>
+      <span class="brand-copy"><strong>ROSE Café</strong><small>Online Order &amp; Delivery</small></span>
     </a>
     <div class="status"><span class="status-dot"></span>พร้อมรับออเดอร์</div>
   </header>
@@ -115,18 +122,18 @@
     <section class="shell hero">
       <div>
         <p class="eyebrow">🌹 HOMEMADE WITH LOVE</p>
-        <h1>ROSE<br>Café <span>อร่อยง่าย ๆ แล้วรับกลับบ้าน</span></h1>
-        <p class="lead">เลือกเมนูโปรดผ่านระบบออนไลน์ สั่งล่วงหน้าได้สะดวก แล้วมารับเมื่ออาหารพร้อม — ไม่มีโต๊ะนั่ง แต่มีความตั้งใจเต็มกระปุกค่ะ</p>
+        <h1>ROSE<br>Café <span>อร่อยง่าย ๆ ส่งตรงถึงคุณ</span></h1>
+        <p class="lead">เลือกเมนูโปรดผ่านระบบออนไลน์ สั่งล่วงหน้าได้สะดวก พร้อมให้ ROSE Café จัดส่งความอร่อยถึงมือคุณ</p>
         <div class="actions">
           <a class="button button-primary" href="https://script.google.com/macros/s/AKfycbx_PqubX4z-wcJ-OcNfARcDkCCLxvDdxrFbairEpoaYJRJL1KQfYhcg5pkGwMsKqHVCvw/exec">🛍️ สั่งอาหารเลย</a>
           <a class="button button-secondary" href="#recommended">ดูเมนูแนะนำ</a>
         </div>
-        <p class="microcopy">✓ สั่งกลับบ้านเท่านั้น &nbsp; ✓ ใช้งานง่ายบนมือถือ</p>
+        <p class="microcopy">✓ บริการจัดส่งเท่านั้น &nbsp; ✓ ใช้งานง่ายบนมือถือ</p>
       </div>
       <div class="hero-visual">
         <span class="spark" aria-hidden="true">✦</span>
         <img class="portrait" src="assets/rose-cafe-logo.jpg" alt="ROSE Café ขนมและเครื่องดื่ม">
-        <div class="stamp">TAKEAWAY<br>ONLY<br>🌹</div>
+        <div class="stamp">DELIVERY<br>ONLY<br>🌹</div>
       </div>
     </section>
 
@@ -146,13 +153,23 @@
         <div class="steps">
           <div class="step"><b>1</b><span>กดเข้าสู่หน้าเมนู</span></div>
           <div class="step"><b>2</b><span>เลือกเมนูและยืนยันออเดอร์</span></div>
-          <div class="step"><b>3</b><span>ติดตามสถานะแล้วมารับสินค้า</span></div>
+          <div class="step"><b>3</b><span>รอรับความอร่อยที่จัดส่งถึงคุณ</span></div>
         </div>
       </article>
+    </section>
+
+    <section class="shell qr-section" aria-labelledby="qr-heading">
+      <img class="qr-image" src="assets/rose-cafe-qr.svg" alt="QR Code สำหรับเปิดหน้า ROSE Café และสั่งอาหารออนไลน์">
+      <div class="qr-copy">
+        <span class="label">SCAN &amp; ORDER</span>
+        <h2 id="qr-heading">สแกนเลย... ความอร่อยกำลังไปหาคุณ!</h2>
+        <p>เปิดเมนู เลือกของโปรด และสั่งล่วงหน้าได้ง่าย ๆ จากมือถือ พร้อมให้ ROSE Café จัดส่งความอร่อยถึงมือคุณ</p>
+        <a class="qr-link" href="assets/rose-cafe-qr.svg" download="ROSE-Cafe-QR-Code.svg">ดาวน์โหลด QR Code</a>
+      </div>
     </section>
   </main>
 
   <a class="mobile-order" href="https://script.google.com/macros/s/AKfycbx_PqubX4z-wcJ-OcNfARcDkCCLxvDdxrFbairEpoaYJRJL1KQfYhcg5pkGwMsKqHVCvw/exec">🛍️ เปิดเมนูและสั่งอาหาร</a>
-  <footer><div class="shell">© 2026 ROSE Café · Takeaway only · Made with 🌹</div></footer>
+  <footer><div class="shell">© 2026 ROSE Café · Delivery only · Made with 🌹</div></footer>
 </body>
 </html>
