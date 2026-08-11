@@ -3,173 +3,93 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#8f2947">
-  <meta name="description" content="ROSE Café — เมนูโฮมเมดและเครื่องดื่ม สั่งออนไลน์ง่าย ๆ พร้อมจัดส่งความอร่อยถึงมือคุณ">
-  <meta property="og:title" content="ROSE Café | Delivery">
-  <meta property="og:description" content="เลือกเมนูโปรด สั่งล่วงหน้าได้สะดวก พร้อมจัดส่งความอร่อยถึงมือคุณ">
-  <meta property="og:image" content="https://madamroses15-code.github.io/rose-cafe/assets/rose-cafe-logo.jpg">
-  <meta property="og:type" content="website">
-  <title>ROSE Café | สั่งออนไลน์ จัดส่งถึงมือคุณ</title>
+  <meta name="theme-color" content="#fffaf5">
+  <meta name="description" content="ROSE Café เลือกเมนูและสั่งอาหารออนไลน์ พร้อมจัดส่งความอร่อยถึงมือคุณ">
+  <title>ROSE Café | สั่งอาหารออนไลน์</title>
   <link rel="icon" href="assets/rose-cafe-logo.jpg">
-  <style>
-    :root {
-      --rose-900:#642036;
-      --rose-700:#8f2947;
-      --rose-500:#c45872;
-      --rose-200:#f4cbd4;
-      --cream:#fffaf4;
-      --paper:#fff;
-      --ink:#3f2830;
-      --muted:#755f66;
-      --gold:#c89a52;
-      --shadow:0 24px 70px rgba(100,32,54,.16);
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      color:var(--ink);
-      font-family:"Noto Sans Thai","Leelawadee UI",Tahoma,sans-serif;
-      background:
-        radial-gradient(circle at 12% 8%,rgba(244,203,212,.75),transparent 30rem),
-        radial-gradient(circle at 90% 78%,rgba(229,194,139,.25),transparent 32rem),
-        var(--cream);
-      min-height:100vh;
-    }
-    a{color:inherit}
-    .shell{width:min(1120px,calc(100% - 32px));margin:auto}
-    .topbar{display:flex;align-items:center;justify-content:space-between;padding:22px 0;gap:18px}
-    .brand{display:flex;align-items:center;gap:12px;text-decoration:none}
-    .brand img{width:52px;height:52px;object-fit:cover;border-radius:50%;border:3px solid #fff;box-shadow:0 6px 20px rgba(100,32,54,.18)}
-    .brand-copy strong{display:block;font-family:Georgia,serif;font-size:1.25rem;color:var(--rose-900);letter-spacing:.03em}
-    .brand-copy small{color:var(--muted)}
-    .status{display:flex;align-items:center;gap:7px;padding:9px 13px;border-radius:999px;background:#fff;border:1px solid var(--rose-200);font-size:.86rem;font-weight:700;color:var(--rose-700)}
-    .status-dot{width:9px;height:9px;border-radius:50%;background:#36a46f;box-shadow:0 0 0 4px rgba(54,164,111,.14)}
-    .hero{display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:48px;padding:44px 0 68px}
-    .eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0 0 18px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.78);border:1px solid var(--rose-200);color:var(--rose-700);font-weight:800;font-size:.85rem}
-    h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(3.25rem,8vw,6.5rem);line-height:.86;letter-spacing:-.055em;color:var(--rose-900);margin:0}
-    h1 span{display:block;margin-top:17px;font-family:"Noto Sans Thai","Leelawadee UI",sans-serif;font-size:clamp(1.25rem,3vw,2rem);line-height:1.25;letter-spacing:0;color:var(--rose-500)}
-    .lead{font-size:clamp(1rem,2vw,1.18rem);line-height:1.8;color:var(--muted);max-width:590px;margin:24px 0 0}
-    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
-    .button{min-height:54px;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 22px;border-radius:16px;text-decoration:none;font-weight:900;transition:.2s ease;touch-action:manipulation}
-    .button-primary{color:#fff;background:linear-gradient(135deg,var(--rose-700),var(--rose-500));box-shadow:0 14px 30px rgba(143,41,71,.27)}
-    .button-primary:hover{transform:translateY(-2px);box-shadow:0 18px 36px rgba(143,41,71,.34)}
-    .button-secondary{background:#fff;border:1px solid var(--rose-200);color:var(--rose-700)}
-    .microcopy{display:flex;align-items:center;gap:8px;margin-top:16px;color:var(--muted);font-size:.87rem}
-    .hero-visual{position:relative;isolation:isolate}
-    .portrait{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:36% 36% 20% 20%;border:8px solid rgba(255,255,255,.82);box-shadow:var(--shadow)}
-    .stamp{position:absolute;left:-30px;bottom:24px;width:132px;height:132px;border-radius:50%;display:grid;place-items:center;text-align:center;color:#fff;background:var(--rose-700);border:5px solid #fff;box-shadow:0 14px 30px rgba(100,32,54,.25);font-weight:900;transform:rotate(-8deg);line-height:1.35}
-    .spark{position:absolute;right:-10px;top:-20px;font-size:3rem;color:var(--gold);transform:rotate(14deg);z-index:-1}
-    .feature-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:22px;padding:0 0 72px}
-    .feature-card{position:relative;overflow:hidden;border-radius:28px;background:rgba(255,255,255,.88);border:1px solid rgba(244,203,212,.8);box-shadow:0 18px 44px rgba(100,32,54,.09)}
-    .product{display:grid;grid-template-columns:.9fr 1.1fr;min-height:310px}
-    .product img{width:100%;height:100%;object-fit:cover}
-    .product-copy{padding:32px;display:flex;flex-direction:column;justify-content:center}
-    .label{color:var(--rose-500);font-size:.8rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
-    h2{font-size:clamp(1.65rem,3vw,2.35rem);line-height:1.25;margin:10px 0;color:var(--rose-900)}
-    .product-copy p,.info-card p{color:var(--muted);line-height:1.7;margin:0}
-    .price{font-family:Georgia,serif;color:var(--rose-700);font-size:2rem;font-weight:900;margin-top:17px}
-    .info-card{padding:32px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(145deg,#fff,#fff4f5)}
-    .steps{display:grid;gap:14px;margin-top:22px}
-    .step{display:flex;align-items:center;gap:13px;color:var(--ink);font-weight:800}
-    .step b{flex:0 0 34px;height:34px;display:grid;place-items:center;border-radius:11px;background:var(--rose-200);color:var(--rose-900)}
-    .qr-section{display:grid;grid-template-columns:.85fr 1.15fr;align-items:center;gap:46px;margin-bottom:72px;padding:42px;border-radius:32px;background:linear-gradient(135deg,#fff0f7,#fff 58%,#fff4d9);border:1px solid var(--rose-200);box-shadow:0 18px 44px rgba(100,32,54,.1)}
-    .qr-image{width:min(100%,420px);justify-self:center;border-radius:26px;box-shadow:0 18px 44px rgba(143,41,71,.2)}
-    .qr-copy h2{margin:10px 0 14px}
-    .qr-copy p{color:var(--muted);line-height:1.8;margin:0}
-    .qr-link{display:inline-flex;margin-top:22px;color:var(--rose-700);font-weight:900;text-decoration:none;border-bottom:2px dashed var(--rose-500)}
-    footer{padding:24px 0 calc(28px + env(safe-area-inset-bottom));border-top:1px solid var(--rose-200);color:var(--muted);font-size:.88rem;text-align:center}
-    .mobile-order{display:none}
-    @media(max-width:820px){
-      .shell{width:min(100% - 24px,680px)}
-      .topbar{padding:14px 0}
-      .status{font-size:.75rem;padding:8px 10px}
-      .hero{grid-template-columns:1fr;gap:30px;padding:28px 0 46px;text-align:center}
-      .eyebrow{margin-left:auto;margin-right:auto}
-      .lead{margin-left:auto;margin-right:auto}
-      .actions{justify-content:center}
-      .microcopy{justify-content:center}
-      .hero-visual{max-width:520px;margin:auto}
-      .stamp{left:2px;bottom:12px;width:112px;height:112px;font-size:.88rem}
-      .feature-grid{grid-template-columns:1fr;padding-bottom:96px}
-      .qr-section{grid-template-columns:1fr;gap:28px;margin-bottom:110px;padding:28px;text-align:center}
-      .qr-image{width:min(100%,460px)}
-      .mobile-order{display:flex;position:fixed;z-index:20;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));min-height:58px;border-radius:18px;color:#fff;background:linear-gradient(135deg,var(--rose-700),var(--rose-500));align-items:center;justify-content:center;text-decoration:none;font-weight:900;box-shadow:0 16px 40px rgba(100,32,54,.38)}
-    }
-    @media(max-width:560px){
-      .brand-copy small{display:none}
-      h1{font-size:3.5rem}
-      .hero{padding-top:18px}
-      .actions .button{width:100%}
-      .product{grid-template-columns:1fr}
-      .product img{height:280px}
-      .product-copy,.info-card{padding:25px}
-      .portrait{border-radius:28px}
-    }
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.button{transition:none}}
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Material+Symbols+Rounded:FILL@0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-  <header class="shell topbar">
-    <a class="brand" href="#top" aria-label="ROSE Café หน้าหลัก">
+<body data-page="customer">
+  <header class="customer-header">
+    <div class="brand-lockup">
       <img src="assets/rose-cafe-logo.jpg" alt="โลโก้ ROSE Café">
-      <span class="brand-copy"><strong>ROSE Café</strong><small>Online Order &amp; Delivery</small></span>
+      <div><strong>ROSE Café</strong><span>บริการจัดส่งเท่านั้น</span></div>
+    </div>
+    <a class="admin-link" href="admin.html" aria-label="เข้าสู่หน้าผู้ดูแล">
+      <span class="material-symbols-rounded">admin_panel_settings</span>
     </a>
-    <div class="status"><span class="status-dot"></span>พร้อมรับออเดอร์</div>
   </header>
 
-  <main id="top">
-    <section class="shell hero">
+  <main class="customer-main">
+    <section class="order-hero" aria-labelledby="menu-title">
       <div>
-        <p class="eyebrow">🌹 HOMEMADE WITH LOVE</p>
-        <h1>ROSE<br>Café <span>อร่อยง่าย ๆ ส่งตรงถึงคุณ</span></h1>
-        <p class="lead">เลือกเมนูโปรดผ่านระบบออนไลน์ สั่งล่วงหน้าได้สะดวก พร้อมให้ ROSE Café จัดส่งความอร่อยถึงมือคุณ</p>
-        <div class="actions">
-          <a class="button button-primary" href="https://script.google.com/macros/s/AKfycbx_PqubX4z-wcJ-OcNfARcDkCCLxvDdxrFbairEpoaYJRJL1KQfYhcg5pkGwMsKqHVCvw/exec">🛍️ สั่งอาหารเลย</a>
-          <a class="button button-secondary" href="#recommended">ดูเมนูแนะนำ</a>
-        </div>
-        <p class="microcopy">✓ บริการจัดส่งเท่านั้น &nbsp; ✓ ใช้งานง่ายบนมือถือ</p>
+        <p class="eyebrow">ROSE CAFÉ ONLINE ORDER</p>
+        <h1 id="menu-title">เมนู ROSE Café</h1>
+        <p>เลือกเมนูและชำระเงิน แล้วรอรับความอร่อยที่จัดส่งถึงคุณ</p>
       </div>
-      <div class="hero-visual">
-        <span class="spark" aria-hidden="true">✦</span>
-        <img class="portrait" src="assets/rose-cafe-logo.jpg" alt="ROSE Café ขนมและเครื่องดื่ม">
-        <div class="stamp">DELIVERY<br>ONLY<br>🌹</div>
-      </div>
+      <div class="delivery-pill"><span class="material-symbols-rounded">local_shipping</span>บริการจัดส่งเท่านั้น</div>
     </section>
 
-    <section id="recommended" class="shell feature-grid">
-      <article class="feature-card product">
-        <img src="assets/nam-prik-pla-too-fu.webp" alt="น้ำพริกปลาทูฟู ROSE Café">
-        <div class="product-copy">
-          <span class="label">เมนูแนะนำ</span>
-          <h2>น้ำพริกปลาทูฟู</h2>
-          <p>รสกลมกล่อม หอมเครื่องสมุนไพร ทานง่าย เหมาะกับข้าวสวยร้อน ๆ</p>
-          <strong class="price">฿55 / กระปุก</strong>
-        </div>
-      </article>
-      <article class="feature-card info-card">
-        <span class="label">HOW TO ORDER</span>
-        <h2>สั่งง่ายใน 3 ขั้นตอน</h2>
-        <div class="steps">
-          <div class="step"><b>1</b><span>กดเข้าสู่หน้าเมนู</span></div>
-          <div class="step"><b>2</b><span>เลือกเมนูและยืนยันออเดอร์</span></div>
-          <div class="step"><b>3</b><span>รอรับความอร่อยที่จัดส่งถึงคุณ</span></div>
-        </div>
-      </article>
-    </section>
+    <div class="sticky-tools">
+      <nav id="category-nav" class="category-nav" aria-label="หมวดหมู่เมนู"></nav>
+      <label class="search-box">
+        <span class="material-symbols-rounded">search</span>
+        <input id="menu-search" type="search" placeholder="ค้นหาเมนู..." autocomplete="off">
+      </label>
+    </div>
 
-    <section class="shell qr-section" aria-labelledby="qr-heading">
-      <img class="qr-image" src="assets/rose-cafe-qr.svg" alt="QR Code สำหรับเปิดหน้า ROSE Café และสั่งอาหารออนไลน์">
-      <div class="qr-copy">
-        <span class="label">SCAN &amp; ORDER</span>
-        <h2 id="qr-heading">สแกนเลย... ความอร่อยกำลังไปหาคุณ!</h2>
-        <p>เปิดเมนู เลือกของโปรด และสั่งล่วงหน้าได้ง่าย ๆ จากมือถือ พร้อมให้ ROSE Café จัดส่งความอร่อยถึงมือคุณ</p>
-        <a class="qr-link" href="assets/rose-cafe-qr.svg" download="ROSE-Cafe-QR-Code.svg">ดาวน์โหลด QR Code</a>
-      </div>
-    </section>
+    <div id="menu-state" class="state-card">กำลังโหลดเมนู...</div>
+    <div id="menu-container" class="menu-sections" hidden></div>
   </main>
 
-  <a class="mobile-order" href="https://script.google.com/macros/s/AKfycbx_PqubX4z-wcJ-OcNfARcDkCCLxvDdxrFbairEpoaYJRJL1KQfYhcg5pkGwMsKqHVCvw/exec">🛍️ เปิดเมนูและสั่งอาหาร</a>
-  <footer><div class="shell">© 2026 ROSE Café · Delivery only · Made with 🌹</div></footer>
+  <button id="cart-fab" class="cart-fab" type="button" aria-label="เปิดตะกร้าสินค้า">
+    <span class="material-symbols-rounded">shopping_cart</span>
+    <b id="cart-badge">0</b>
+  </button>
+
+  <div id="drawer-backdrop" class="drawer-backdrop" hidden></div>
+  <aside id="cart-drawer" class="cart-drawer" aria-label="สรุปรายการสั่งซื้อ" aria-hidden="true">
+    <header>
+      <div><p class="eyebrow">YOUR ORDER</p><h2>สรุปรายการสั่งซื้อ</h2></div>
+      <button id="close-cart" class="icon-button" type="button" aria-label="ปิดตะกร้า"><span class="material-symbols-rounded">close</span></button>
+    </header>
+    <div id="cart-items" class="cart-items"><p class="empty-message">ยังไม่มีรายการในตะกร้า</p></div>
+    <footer>
+      <div class="discount-wrap"><label for="discount-select">ส่วนลด</label><select id="discount-select"><option value="">ไม่มีส่วนลด</option></select></div>
+      <div class="total-row"><span>ยอดสุทธิ</span><strong id="cart-total">฿0.00</strong></div>
+      <button id="place-order" class="primary-button" type="button" disabled><span class="material-symbols-rounded">payments</span>สั่งซื้อและชำระเงิน</button>
+    </footer>
+  </aside>
+
+  <dialog id="payment-dialog" class="payment-dialog">
+    <form method="dialog" class="payment-card">
+      <button class="icon-button dialog-close" value="cancel" aria-label="ปิด"><span class="material-symbols-rounded">close</span></button>
+      <p class="eyebrow">PAYMENT</p>
+      <h2>ชำระเงินออเดอร์</h2>
+      <p id="payment-order-number" class="order-number"></p>
+      <div class="payment-total"><span>ยอดที่ต้องชำระ</span><strong id="payment-total">฿0.00</strong></div>
+      <div class="payment-tabs" role="tablist">
+        <button class="payment-tab active" type="button" data-method="QR PromptPay">QR PromptPay</button>
+        <button class="payment-tab" type="button" data-method="Cash">เงินสดปลายทาง</button>
+      </div>
+      <section id="qr-payment" class="payment-panel">
+        <img id="promptpay-qr" alt="QR Code พร้อมเพย์ ROSE Café">
+        <label class="slip-upload"><span class="material-symbols-rounded">upload_file</span><span id="slip-label">แนบสลิปการโอนเงิน</span><input id="slip-input" type="file" accept="image/png,image/jpeg,image/webp"></label>
+      </section>
+      <section id="cash-payment" class="payment-panel" hidden>
+        <p>ชำระเงินสดเมื่อได้รับสินค้า กรุณาเตรียมเงินให้พอดีเพื่อความรวดเร็วค่ะ</p>
+      </section>
+      <button id="confirm-payment" class="primary-button" type="button">ยืนยันการชำระเงิน</button>
+      <p id="payment-message" class="form-message" aria-live="polite"></p>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="api.js"></script>
+  <script src="payment-qr.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
