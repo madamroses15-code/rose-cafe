@@ -8,7 +8,10 @@ ROSE Café — Apps Script Backend API
 3. วางโค้ดจากไฟล์ Code.gs ชุดนี้แทนทั้งหมด แล้วกด Save
 4. ไม่ต้องใช้ Index.html, Style.html หรือ Script.html สำหรับหน้าเว็บอีกต่อไป
 5. เปิด Project Settings > Script Properties
-6. เพิ่ม Property ชื่อ ADMIN_PASSWORD และกำหนดรหัสผ่านใหม่ที่คาดเดายาก
+6. เพิ่ม Script Properties จำนวน 3 ค่า
+   - SPREADSHEET_ID = รหัสจาก URL ของ Google Sheet หลัง /d/ และก่อน /edit
+   - PAYMENT_FOLDER_ID = รหัสจาก URL โฟลเดอร์ Google Drive สำหรับเก็บสลิป
+   - ADMIN_PASSWORD = รหัสผ่านใหม่ที่คาดเดายาก (ไม่ควรใช้ 1234)
 7. เลือกฟังก์ชัน preDeployCheck แล้วกด Run
 8. ไปที่ Deploy > Manage deployments > Edit
 9. เลือก Version: New version
@@ -17,6 +20,8 @@ ROSE Café — Apps Script Backend API
 
 สำคัญ
 - ใช้ Deployment เดิม เพื่อให้ URL API เดิมไม่เปลี่ยน
+- ระบบจะไม่เก็บ Spreadsheet ID, Folder ID หรือรหัส Admin ไว้ใน GitHub
+- ไฟล์สลิปจะเป็นไฟล์ส่วนตัวใน Google Drive ไม่เปิด Anyone with link อัตโนมัติ
 - หน้า GitHub ถูกตั้งค่าให้เรียก URL นี้แล้ว:
   https://script.google.com/macros/s/AKfycbx_PqubX4z-wcJ-OcNfARcDkCCLxvDdxrFbairEpoaYJRJL1KQfYhcg5pkGwMsKqHVCvw/exec
 - หลัง Deploy ทดสอบโดยเปิด:
