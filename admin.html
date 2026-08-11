@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#fffaf5">
+  <title>ROSE Café | Admin</title>
+  <link rel="icon" href="assets/rose-cafe-logo.jpg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Material+Symbols+Rounded:FILL@0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="admin">
+  <div id="login-screen" class="login-screen">
+    <form id="login-form" class="login-card">
+      <img src="assets/rose-cafe-logo.jpg" alt="โลโก้ ROSE Café">
+      <h1>ROSE Café Admin</h1>
+      <p>สำหรับผู้ดูแลร้านเท่านั้น</p>
+      <input id="admin-password" type="password" inputmode="numeric" placeholder="รหัสผ่าน Admin" autocomplete="current-password" required>
+      <button class="primary-button" type="submit"><span class="material-symbols-rounded">lock_open</span>เข้าสู่ระบบ</button>
+      <p id="login-message" class="form-message" aria-live="polite"></p>
+    </form>
+  </div>
+
+  <div class="admin-shell">
+    <aside class="admin-sidebar">
+      <div class="admin-brand"><img src="assets/rose-cafe-logo.jpg" alt=""><div><strong>ROSE Café</strong><small>Admin Management</small></div></div>
+      <nav class="admin-nav" aria-label="เมนูผู้ดูแล">
+        <button class="active" type="button" data-panel="orders"><span class="material-symbols-rounded">receipt_long</span>สถานะออเดอร์</button>
+        <button type="button" data-panel="menu"><span class="material-symbols-rounded">edit_note</span>จัดการเมนู</button>
+        <button type="button" data-panel="dashboard"><span class="material-symbols-rounded">bar_chart</span>Dashboard</button>
+      </nav>
+      <footer><a href="index.html"><span class="material-symbols-rounded">storefront</span>เปิดหน้าลูกค้า</a></footer>
+    </aside>
+
+    <main class="admin-content">
+      <header class="admin-topbar">
+        <div><p class="eyebrow">ROSE CAFÉ MANAGEMENT</p><h1 id="panel-title">สถานะออเดอร์จัดส่ง</h1></div>
+        <button id="logout-button" class="secondary-button" type="button"><span class="material-symbols-rounded">logout</span>ออกจากระบบ</button>
+      </header>
+
+      <section id="panel-orders" class="admin-panel active">
+        <div class="admin-controls">
+          <input id="order-date" type="date" aria-label="วันที่ออเดอร์">
+          <label class="secondary-button"><input id="show-paid" type="checkbox"> แสดงออเดอร์ที่ชำระแล้ว</label>
+          <button id="refresh-orders" class="secondary-button" type="button"><span class="material-symbols-rounded">refresh</span>รีเฟรช</button>
+        </div>
+        <div id="orders-state" class="state-card">กรุณาเข้าสู่ระบบ</div>
+        <div id="orders-grid" class="orders-grid" hidden></div>
+      </section>
+
+      <section id="panel-menu" class="admin-panel">
+        <div class="admin-controls"><button id="add-menu" class="primary-button" style="width:auto;padding:0 18px" type="button"><span class="material-symbols-rounded">add_circle</span>เพิ่มเมนูใหม่</button></div>
+        <div id="menu-state-admin" class="state-card">กำลังโหลดเมนู...</div>
+        <div id="manage-grid" class="manage-grid" hidden></div>
+      </section>
+
+      <section id="panel-dashboard" class="admin-panel">
+        <div class="metrics">
+          <article class="metric-card"><span>ยอดขายวันนี้</span><strong id="daily-sales">฿0.00</strong></article>
+          <article class="metric-card"><span>ยอดขายเดือนนี้</span><strong id="monthly-sales">฿0.00</strong></article>
+          <article class="metric-card"><span>จำนวนเมนูขายดี</span><strong id="tracked-items">0</strong></article>
+        </div>
+        <article class="chart-card"><h2>เมนูขายดี</h2><div id="top-items" class="bar-list"></div></article>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="menu-dialog" class="menu-dialog">
+    <form id="menu-form" class="menu-form">
+      <h2 id="menu-form-title">เพิ่มเมนู</h2>
+      <input id="original-name" type="hidden">
+      <label>ชื่อเมนู<input id="menu-name" required></label>
+      <label>รายละเอียด<textarea id="menu-description"></textarea></label>
+      <label>ราคา<input id="menu-price" type="number" min="0" step="0.01" required></label>
+      <label>ราคาพิเศษเพิ่มเติม<input id="menu-extra-price" type="number" min="0" step="0.01"></label>
+      <label>หมวดหมู่<input id="menu-category" required></label>
+      <label>URL รูปภาพ<input id="menu-image-url" type="url"></label>
+      <label>สถานะ<select id="menu-status"><option value="Available">Available</option><option value="Sold Out">Sold Out</option></select></label>
+      <label><span><input id="menu-track-sales" type="checkbox"> นับยอดขายใน Dashboard</span></label>
+      <p id="menu-form-message" class="form-message"></p>
+      <div class="form-actions"><button id="cancel-menu" class="secondary-button" type="button">ยกเลิก</button><button class="primary-button" style="width:auto;padding:0 18px" type="submit">บันทึกเมนู</button></div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="api.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
