@@ -2,16 +2,14 @@
 
 หน้า Landing สำหรับเปิด Google Apps Script Web App ผ่าน GitHub Pages
 
-## URL ที่คาดว่าจะได้
+## เว็บไซต์
 
-`https://madamroses15-code.github.io/rose-cafe/`
+https://madamroses15-code.github.io/rose-cafe/
 
-## เปิด GitHub Pages
+## การเผยแพร่
 
-1. ไปที่ Repository `rose-cafe`
-2. เปิด **Settings → Pages**
-3. ที่ **Build and deployment** เลือก **Deploy from a branch**
-4. เลือก Branch `main` และ Folder `/ (root)`
-5. กด **Save**
+Repository นี้ใช้ GitHub Actions เพื่อเผยแพร่เว็บไซต์อัตโนมัติเมื่อมีการอัปเดตสาขา `main`
 
-ระบบอาจใช้เวลาประมาณ 1–3 นาทีในการสร้างหน้าเว็บครั้งแรก
+ตั้งค่าที่ **Settings → Pages → Build and deployment → Source: GitHub Actions**
+
+Last deployment trigger: 2026-08-11
