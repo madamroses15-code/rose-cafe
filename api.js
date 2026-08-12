@@ -12,14 +12,16 @@
 
   const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
   const requestId = () => (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(36).slice(2)}`);
+  const JSONP_TIMEOUT_MS = 45000;
+  const POST_RESULT_TIMEOUT_MS = 90000;
 
-  function jsonp(action, params = {}) {
+  function jsonp(action, params = {}, timeoutMs = JSONP_TIMEOUT_MS) {
     if (DEMO) return demoGet(action, params);
     return new Promise((resolve, reject) => {
       const callback = `roseApi_${Date.now()}_${Math.random().toString(36).slice(2)}`;
       const script = document.createElement('script');
-      const query = new URLSearchParams({action, callback, ...params});
-      const timer = setTimeout(() => finish(new Error('เซิร์ฟเวอร์ตอบสนองช้าเกินไป')), 20000);
+      const query = new URLSearchParams({action, callback, ...params, _:Date.now()});
+      const timer = setTimeout(() => finish(new Error('เซิร์ฟเวอร์ตอบสนองช้า กรุณารอสักครู่')), timeoutMs);
       function finish(error, data) {
         clearTimeout(timer);
         delete window[callback];
@@ -37,16 +39,32 @@
     if (DEMO) return demoPost(action, payload);
     const id = requestId();
     const body = new URLSearchParams({action, requestId:id, payload:JSON.stringify(payload)});
-    await fetch(ENDPOINT, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'}, body});
-    for (let attempt = 0; attempt < 24; attempt += 1) {
+    const controller = new AbortController();
+    const submitTimer = setTimeout(() => controller.abort(), 45000);
+    try {
+      await fetch(ENDPOINT, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'}, body, signal:controller.signal});
+    } catch (error) {
+      // Apps Script อาจรับคำขอแล้วแม้เบราว์เซอร์หมดเวลารอ จึงตรวจผลจาก requestId ต่อเพื่อป้องกันออเดอร์ซ้ำ
+    } finally {
+      clearTimeout(submitTimer);
+    }
+    const deadline = Date.now() + POST_RESULT_TIMEOUT_MS;
+    let lastConnectionError = null;
+    for (let attempt = 0; Date.now() < deadline; attempt += 1) {
       await sleep(attempt < 2 ? 550 : 900);
-      const result = await jsonp('result', {requestId:id});
-      if (result && !result.pending) {
-        if (result.success === false) throw new Error(result.message || 'ดำเนินการไม่สำเร็จ');
-        return result;
+      try {
+        const remaining = Math.max(5000, Math.min(JSONP_TIMEOUT_MS, deadline - Date.now()));
+        const result = await jsonp('result', {requestId:id}, remaining);
+        if (result && !result.pending) {
+          if (result.success === false) throw new Error(result.message || 'ดำเนินการไม่สำเร็จ');
+          return result;
+        }
+      } catch (error) {
+        if (!/ตอบสนองช้า|เชื่อมต่อ/.test(error.message)) throw error;
+        lastConnectionError = error;
       }
     }
-    throw new Error('ยังไม่ได้รับคำตอบจากระบบ กรุณาตรวจสอบรายการอีกครั้ง');
+    throw new Error(lastConnectionError ? 'การเชื่อมต่อไม่เสถียร กรุณาลองอีกครั้ง' : 'ยังไม่ได้รับคำตอบจากระบบ กรุณาตรวจสอบรายการอีกครั้ง');
   }
 
   async function demoGet(action) {
