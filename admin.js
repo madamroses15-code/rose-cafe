@@ -22,9 +22,10 @@
     el('menu-form').addEventListener('submit',saveMenu);
   }
   async function login(event){
-    event.preventDefault();const message=el('login-message');message.textContent='กำลังตรวจสอบ...';message.className='form-message';
+    event.preventDefault();const message=el('login-message');const button=el('admin-login-button');button.disabled=true;button.innerHTML='<span class="material-symbols-rounded">hourglass_top</span>กำลังเชื่อมต่อ...';message.textContent='กำลังตรวจสอบ อาจใช้เวลาประมาณ 15–30 วินาที';message.className='form-message';
     try{const result=await RoseApi.post('adminLogin',{password:el('admin-password').value});state.token=result.token;sessionStorage.setItem('roseAdminToken',state.token);el('admin-password').value='';el('login-screen').hidden=true;message.textContent='';loadOrders();}
     catch(error){message.textContent=error.message;message.className='form-message error';}
+    finally{button.disabled=false;button.innerHTML='<span class="material-symbols-rounded">lock_open</span>เข้าสู่ระบบ';}
   }
   function logout(){state.token='';sessionStorage.removeItem('roseAdminToken');el('login-screen').hidden=false;}
   function switchPanel(event){const button=event.target.closest('button[data-panel]');if(!button)return;document.querySelectorAll('.admin-nav button').forEach(node=>node.classList.toggle('active',node===button));document.querySelectorAll('.admin-panel').forEach(panel=>panel.classList.toggle('active',panel.id===`panel-${button.dataset.panel}`));el('panel-title').textContent=panelTitles[button.dataset.panel];if(button.dataset.panel==='orders')loadOrders();if(button.dataset.panel==='menu')loadMenu();if(button.dataset.panel==='dashboard')loadDashboard();}
