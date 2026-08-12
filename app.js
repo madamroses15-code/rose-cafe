@@ -36,9 +36,14 @@
       state.discount = state.discounts[Number(event.target.value)] || null;
       renderCart();
     });
-    el('place-order').addEventListener('click', placeOrder);
+    el('place-order').addEventListener('click', openCheckout);
     document.querySelectorAll('.payment-tab').forEach(button => button.addEventListener('click', selectPayment));
     el('slip-input').addEventListener('change', handleSlip);
+    el('use-current-location').addEventListener('click', useCurrentLocation);
+    ['customer-name','customer-phone','delivery-address','delivery-location'].forEach(id => el(id).addEventListener('input', event => {
+      event.currentTarget.classList.remove('user-invalid');
+      event.currentTarget.setCustomValidity('');
+    }));
     el('confirm-payment').addEventListener('click', confirmPayment);
   }
 
@@ -103,21 +108,14 @@
     el('drawer-backdrop').hidden = !open;
     document.body.style.overflow = open ? 'hidden' : '';
   }
-  async function placeOrder() {
-    const button = el('place-order');
-    button.disabled = true; button.innerHTML = 'กำลังสร้างออเดอร์...';
-    try {
-      const details = {tableNumber:'Delivery (จัดส่ง)',customerCount:1,items:[...state.cart.values()].map(({name,price,note,quantity})=>({name,price,note,quantity})),discount:state.discount};
-      const response = await RoseApi.post('order',details);
-      state.order = {orderNumber:response.orderNumber,total:totals().total};
-      state.cart.clear(); state.discount=null; el('discount-select').value=''; renderMenu(); renderCart(); toggleCart(false); openPayment();
-    } catch (error) { toast(error.message); }
-    finally { button.disabled=state.cart.size===0; button.innerHTML='<span class="material-symbols-rounded">payments</span>สั่งซื้อและชำระเงิน'; }
-  }
-  function openPayment() {
-    el('payment-order-number').textContent = state.order.orderNumber;
-    el('payment-total').textContent = money(state.order.total);
+  function openCheckout() {
+    if (!state.cart.size) return;
+    state.order = null;
+    el('payment-order-number').textContent = 'ระบบจะสร้างเลขออเดอร์เมื่อยืนยัน';
+    el('payment-total').textContent = money(totals().total);
     el('payment-message').textContent='';
+    el('payment-message').className='form-message';
+    toggleCart(false);
     el('payment-dialog').showModal();
   }
   function selectPayment(event) {
@@ -130,16 +128,57 @@
     if(file.size>5*1024*1024){toast('ไฟล์สลิปต้องไม่เกิน 5 MB');event.target.value='';return;}
     state.slipData=await fileToDataUrl(file); el('slip-label').textContent=`แนบแล้ว: ${file.name}`;
   }
+  function useCurrentLocation() {
+    const button=el('use-current-location');
+    const status=el('location-status');
+    if(!navigator.geolocation){status.textContent='อุปกรณ์นี้ไม่รองรับการระบุตำแหน่ง กรุณาวางลิงก์ Google Maps แทน';status.className='location-status error';return;}
+    button.disabled=true;status.textContent='กำลังค้นหาตำแหน่ง...';status.className='location-status';
+    navigator.geolocation.getCurrentPosition(position=>{
+      const latitude=position.coords.latitude.toFixed(6);
+      const longitude=position.coords.longitude.toFixed(6);
+      el('delivery-location').value=`https://www.google.com/maps?q=${latitude},${longitude}`;
+      el('delivery-location').classList.remove('user-invalid');
+      status.textContent='บันทึกตำแหน่งปัจจุบันแล้ว';status.className='location-status success';button.disabled=false;
+    },error=>{
+      const messages={1:'ไม่ได้รับสิทธิ์เข้าถึงตำแหน่ง กรุณาอนุญาต Location หรือวางลิงก์ Google Maps',2:'ค้นหาตำแหน่งไม่สำเร็จ กรุณาลองใหม่',3:'ใช้เวลาค้นหาตำแหน่งนานเกินไป กรุณาลองใหม่'};
+      status.textContent=messages[error.code]||'ไม่สามารถใช้ตำแหน่งปัจจุบันได้';status.className='location-status error';button.disabled=false;
+    },{enableHighAccuracy:true,timeout:12000,maximumAge:60000});
+  }
+  function deliveryDetails() {
+    const name=el('customer-name');
+    const phone=el('customer-phone');
+    const address=el('delivery-address');
+    const location=el('delivery-location');
+    const values={customerName:name.value.trim(),customerPhone:phone.value.trim(),deliveryAddress:address.value.trim(),deliveryLocation:location.value.trim()};
+    const digits=values.customerPhone.replace(/\D/g,'');
+    if(values.customerName.length<2){name.setCustomValidity('กรุณากรอกชื่อผู้รับอย่างน้อย 2 ตัวอักษร');return invalidField(name);}
+    if(digits.length<9||digits.length>10){phone.setCustomValidity('กรุณากรอกเบอร์โทรศัพท์ 9–10 หลัก');return invalidField(phone);}
+    if(values.deliveryAddress.length<8){address.setCustomValidity('กรุณากรอกที่อยู่จัดส่งให้ครบถ้วน');return invalidField(address);}
+    if(values.deliveryLocation&&!location.checkValidity()){location.setCustomValidity('กรุณาใส่ลิงก์ Location ที่ขึ้นต้นด้วย https://');return invalidField(location);}
+    values.customerPhone=digits;
+    return values;
+  }
+  function invalidField(field){field.classList.add('user-invalid');field.reportValidity();field.focus();return null;}
   async function confirmPayment() {
     const message=el('payment-message');
+    const customer=deliveryDetails();
+    if(!customer){message.textContent='กรุณาตรวจสอบข้อมูลจัดส่ง';message.className='form-message error';return;}
     if(state.paymentMethod!=='Cash'&&!state.slipData){message.textContent='กรุณาแนบสลิปก่อนยืนยัน';message.className='form-message error';return;}
-    const button=el('confirm-payment');button.disabled=true;button.textContent='กำลังบันทึกการชำระเงิน...';
+    const button=el('confirm-payment');button.disabled=true;button.textContent='กำลังสร้างออเดอร์...';
     try {
+      if(!state.order){
+        const details={tableNumber:'Delivery (จัดส่ง)',customerCount:1,items:[...state.cart.values()].map(({name,price,note,quantity})=>({name,price,note,quantity})),discount:state.discount,...customer};
+        const response=await RoseApi.post('order',details);
+        state.order={orderNumber:response.orderNumber,total:totals().total};
+        el('payment-order-number').textContent=state.order.orderNumber;
+      }
+      button.textContent='กำลังบันทึกการชำระเงิน...';
       await RoseApi.post('payment',{orderNumber:state.order.orderNumber,paymentMethod:state.paymentMethod,cashReceived:0,changeGiven:0,imageData:state.slipData});
       message.textContent='ชำระเงินเรียบร้อย ขอบคุณที่อุดหนุน ROSE Café ค่ะ';message.className='form-message success';
-      setTimeout(()=>{el('payment-dialog').close();state.slipData='';el('slip-input').value='';el('slip-label').textContent='แนบสลิปการโอนเงิน';},1800);
-    } catch(error){message.textContent=error.message;message.className='form-message error';}
-    finally{button.disabled=false;button.textContent='ยืนยันการชำระเงิน';}
+      state.cart.clear();state.discount=null;el('discount-select').value='';renderMenu();renderCart();
+      setTimeout(()=>{el('payment-dialog').close();state.slipData='';state.order=null;el('slip-input').value='';el('slip-label').textContent='แนบสลิปการโอนเงิน';},1800);
+    } catch(error){message.textContent=state.order?`สร้างออเดอร์ ${state.order.orderNumber} แล้ว แต่บันทึกการชำระเงินไม่สำเร็จ: ${error.message}`:error.message;message.className='form-message error';}
+    finally{button.disabled=false;button.textContent='ยืนยันสั่งซื้อและชำระเงิน';}
   }
   function fileToDataUrl(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error('อ่านไฟล์สลิปไม่สำเร็จ'));reader.readAsDataURL(file);});}
   function toast(message){const node=el('toast');node.textContent=message;node.classList.add('show');setTimeout(()=>node.classList.remove('show'),3000);}
