@@ -69,8 +69,22 @@
       <button class="icon-button dialog-close" value="cancel" aria-label="ปิด"><span class="material-symbols-rounded">close</span></button>
       <p class="eyebrow">PAYMENT</p>
       <h2>ชำระเงินออเดอร์</h2>
-      <p id="payment-order-number" class="order-number"></p>
+      <p id="payment-order-number" class="order-number">ระบบจะสร้างเลขออเดอร์เมื่อยืนยัน</p>
       <div class="payment-total"><span>ยอดที่ต้องชำระ</span><strong id="payment-total">฿0.00</strong></div>
+      <section class="delivery-form" aria-labelledby="delivery-form-title">
+        <div class="delivery-form-heading">
+          <span class="material-symbols-rounded">local_shipping</span>
+          <div><h3 id="delivery-form-title">ข้อมูลสำหรับจัดส่ง</h3><p>กรอกข้อมูลให้ครบเพื่อให้ร้านจัดส่งได้ถูกต้อง</p></div>
+        </div>
+        <div class="delivery-field-grid">
+          <label class="form-field"><span>ชื่อผู้รับ <b>*</b></span><input id="customer-name" name="customerName" type="text" autocomplete="name" maxlength="80" placeholder="ชื่อผู้รับสินค้า" required></label>
+          <label class="form-field"><span>เบอร์โทรศัพท์ <b>*</b></span><input id="customer-phone" name="customerPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="15" placeholder="เช่น 0812345678" required></label>
+        </div>
+        <label class="form-field"><span>ที่อยู่จัดส่ง <b>*</b></span><textarea id="delivery-address" name="deliveryAddress" autocomplete="street-address" maxlength="500" rows="3" placeholder="บ้านเลขที่ หมู่บ้าน ถนน ตำบล/แขวง อำเภอ/เขต จังหวัด และรหัสไปรษณีย์" required></textarea></label>
+        <label class="form-field"><span>ตำแหน่ง Location <em>(ไม่บังคับ)</em></span><input id="delivery-location" name="deliveryLocation" type="url" inputmode="url" maxlength="500" placeholder="วางลิงก์ Google Maps หรือกดปุ่มด้านล่าง"></label>
+        <button id="use-current-location" class="location-button" type="button"><span class="material-symbols-rounded">my_location</span>ใช้ตำแหน่งปัจจุบัน</button>
+        <p id="location-status" class="location-status" aria-live="polite">ระบบจะขอสิทธิ์ตำแหน่งเฉพาะเมื่อกดปุ่มนี้</p>
+      </section>
       <div class="payment-tabs" role="tablist">
         <button class="payment-tab active" type="button" data-method="QR PromptPay">QR PromptPay</button>
         <button class="payment-tab" type="button" data-method="Cash">เงินสดปลายทาง</button>
@@ -82,7 +96,7 @@
       <section id="cash-payment" class="payment-panel" hidden>
         <p>ชำระเงินสดเมื่อได้รับสินค้า กรุณาเตรียมเงินให้พอดีเพื่อความรวดเร็วค่ะ</p>
       </section>
-      <button id="confirm-payment" class="primary-button" type="button">ยืนยันการชำระเงิน</button>
+      <button id="confirm-payment" class="primary-button" type="button">ยืนยันสั่งซื้อและชำระเงิน</button>
       <p id="payment-message" class="form-message" aria-live="polite"></p>
     </form>
   </dialog>
