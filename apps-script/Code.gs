@@ -10,6 +10,7 @@ const kitchenSheet = ss ? ss.getSheetByName("KitchenDisplay") : null;
 
 // ROSE Café Delivery Only v2.1
 const TAKEAWAY_LABEL = "Delivery (จัดส่ง)";
+const ORDER_DELIVERY_HEADERS = ["CustomerName", "CustomerPhone", "DeliveryAddress", "DeliveryLocation"];
 
 // ใช้รวมยอดขายจากชื่อเดิมเข้ากับชื่อใหม่ เพื่อไม่ให้สถิติออเดอร์เก่าหาย
 const MENU_RENAME_MAP = {
@@ -54,6 +55,42 @@ function normalizeMenuItemName(itemName) {
   }
 
   return rawName;
+}
+
+function ensureOrderDeliveryHeaders_() {
+  if (!orderSheet) throw new Error("ไม่พบชีต Orders");
+  const lastColumn = Math.max(orderSheet.getLastColumn(), 1);
+  const headers = orderSheet.getRange(1, 1, 1, lastColumn).getValues()[0];
+  const missingHeaders = ORDER_DELIVERY_HEADERS.filter(name => headers.indexOf(name) === -1);
+  if (missingHeaders.length) {
+    orderSheet.getRange(1, lastColumn + 1, 1, missingHeaders.length).setValues([missingHeaders]);
+  }
+  return headers.concat(missingHeaders);
+}
+
+function setupDeliveryColumns() {
+  const headers = ensureOrderDeliveryHeaders_();
+  return { success: true, headers: ORDER_DELIVERY_HEADERS.map(name => ({ name: name, column: headers.indexOf(name) + 1 })) };
+}
+
+function orderCell_(row, headers, name) {
+  const index = headers.indexOf(name);
+  return index === -1 ? "" : row[index];
+}
+
+function validateDeliveryDetails_(orderDetails) {
+  const customerName = (orderDetails.customerName || "").toString().trim().replace(/\s+/g, " ");
+  const customerPhone = (orderDetails.customerPhone || "").toString().replace(/\D/g, "");
+  const deliveryAddress = (orderDetails.deliveryAddress || "").toString().trim();
+  const deliveryLocation = (orderDetails.deliveryLocation || "").toString().trim();
+
+  if (customerName.length < 2 || customerName.length > 80) throw new Error("กรุณากรอกชื่อผู้รับให้ถูกต้อง");
+  if (!/^\d{9,10}$/.test(customerPhone)) throw new Error("กรุณากรอกเบอร์โทรศัพท์ 9–10 หลัก");
+  if (deliveryAddress.length < 8 || deliveryAddress.length > 500) throw new Error("กรุณากรอกที่อยู่จัดส่งให้ครบถ้วน");
+  if (deliveryLocation.length > 500) throw new Error("ลิงก์ Location ยาวเกินไป");
+  if (deliveryLocation && !/^https:\/\//i.test(deliveryLocation)) throw new Error("Location ต้องเป็นลิงก์ https://");
+
+  return { customerName: customerName, customerPhone: customerPhone, deliveryAddress: deliveryAddress, deliveryLocation: deliveryLocation };
 }
 
 // --- 1. API ROUTING FOR GITHUB PAGES ---
@@ -375,6 +412,8 @@ function processOrder(orderDetails) {
     orderLock.waitLock(10000);
     orderLockAcquired = true;
     const { items, discount } = orderDetails;
+    if (!Array.isArray(items) || !items.length) throw new Error("ไม่มีรายการสินค้าในออเดอร์");
+    const delivery = validateDeliveryDetails_(orderDetails);
     const tableNumber = TAKEAWAY_LABEL;
     const customerCount = 1;
     const timestamp = new Date();
@@ -383,7 +422,7 @@ function processOrder(orderDetails) {
     const formattedDate = Utilities.formatDate(timestamp, scriptTimeZone, "yyMMddHHmmssSSS");
     const orderNumber = "ORD-" + formattedDate;
 
-    const headers = orderSheet.getRange(1, 1, 1, orderSheet.getLastColumn()).getValues()[0];
+    const headers = ensureOrderDeliveryHeaders_();
     
     // ป้องกัน Error กรณีหา Index ไม่เจอ
     const getIdx = (name) => {
@@ -417,6 +456,10 @@ function processOrder(orderDetails) {
       newRow[getIdx("TotalPrice")] = finalPrice;
       newRow[getIdx("Status")] = status;
       newRow[getIdx("OrderGrandTotal")] = orderGrandTotal;
+      newRow[getIdx("CustomerName")] = delivery.customerName;
+      newRow[getIdx("CustomerPhone")] = delivery.customerPhone;
+      newRow[getIdx("DeliveryAddress")] = delivery.deliveryAddress;
+      newRow[getIdx("DeliveryLocation")] = delivery.deliveryLocation;
       return newRow;
     });
 
@@ -425,7 +468,7 @@ function processOrder(orderDetails) {
       syncKitchenDisplay();
     }
 
-    return { success: true, orderNumber: orderNumber, tableNumber: tableNumber };
+    return { success: true, orderNumber: orderNumber, tableNumber: tableNumber, customerName: delivery.customerName };
   } catch (error) {
     return { success: false, message: error.message };
   } finally {
@@ -613,6 +656,10 @@ function getOrderHistory(dateString) {
           orderNumber: orderNum,
           tableNumber: row[getIdx("TableNumber")],
           status: row[getIdx("Status")],
+          customerName: orderCell_(row, headers, "CustomerName"),
+          customerPhone: orderCell_(row, headers, "CustomerPhone"),
+          deliveryAddress: orderCell_(row, headers, "DeliveryAddress"),
+          deliveryLocation: orderCell_(row, headers, "DeliveryLocation"),
           timestampForDisplay: Utilities.formatDate(timestamp, tz, "HH:mm"),
           isoTimestamp: timestamp.toISOString(),
           items: [],
@@ -652,6 +699,10 @@ function getNewOrders(latestTimestamp) {
           orderNumber: orderNum,
           tableNumber: row[getIdx("TableNumber")],
           status: row[getIdx("Status")],
+          customerName: orderCell_(row, headers, "CustomerName"),
+          customerPhone: orderCell_(row, headers, "CustomerPhone"),
+          deliveryAddress: orderCell_(row, headers, "DeliveryAddress"),
+          deliveryLocation: orderCell_(row, headers, "DeliveryLocation"),
           timestampForDisplay: Utilities.formatDate(timestamp, Session.getScriptTimeZone(), "HH:mm"),
           isoTimestamp: timestamp.toISOString(),
           items: []
@@ -682,6 +733,10 @@ function getOrderDetails(orderNumber) {
           details = {
             orderNumber: orderNumber, // แก้จาก orderNum เป็น orderNumber [ตาม Parameter ที่รับมา]
             tableNumber: row[getIdx("TableNumber")],
+            customerName: orderCell_(row, headers, "CustomerName"),
+            customerPhone: orderCell_(row, headers, "CustomerPhone"),
+            deliveryAddress: orderCell_(row, headers, "DeliveryAddress"),
+            deliveryLocation: orderCell_(row, headers, "DeliveryLocation"),
             subtotal: 0,
             discountAmount: 0,
             total: parseFloat(row[getIdx("OrderGrandTotal")] || 0)
