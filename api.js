@@ -63,7 +63,7 @@
     if (action === 'adminLogin') return payload.password === '1234' ? {success:true,token:'demo-admin-token'} : Promise.reject(new Error('รหัสผ่านไม่ถูกต้อง'));
     if (action === 'adminHistory') {
       return {success:true,orders:{
-        'ORD-DEMO-001':{orderNumber:'ORD-DEMO-001',status:'Waiting',timestampForDisplay:'09:45',isoTimestamp:new Date().toISOString(),items:[{name:'น้ำพริกปลาทูฟู',quantity:2}],total:110},
+        'ORD-DEMO-001':{orderNumber:'ORD-DEMO-001',status:'Waiting',timestampForDisplay:'09:45',isoTimestamp:new Date().toISOString(),customerName:'คุณโรส',customerPhone:'0812345678',deliveryAddress:'15 ถนนกุหลาบ แขวงบางรัก กรุงเทพมหานคร 10500',deliveryLocation:'https://www.google.com/maps?q=13.724560,100.493030',items:[{name:'น้ำพริกปลาทูฟู',quantity:2}],total:110},
         'ORD-DEMO-002':{orderNumber:'ORD-DEMO-002',status:'Paid',timestampForDisplay:'09:20',isoTimestamp:new Date(Date.now()-1000000).toISOString(),items:[{name:'โรส อัญชัญเลมอน',quantity:1}],total:25}
       }};
     }
